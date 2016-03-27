@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	
+		<script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+	
+		<link rel="stylesheet" type="text/css" href="../css/view.css">
+	
+		<script>
+			function getData(){
+			
+				//for dynamically center loading gif
+				var heightSlider = $('#container').height();
+				$('#spinner').css({ paddingTop : heightSlider + 250 + 'px' });
+			
+
+				var myFirebaseRef = new Firebase("https://francisudpa3.firebaseio.com");
+				myFirebaseRef.once("value", function(snapshot) {		
+				
+				//appends to container a table
+				 $('.container').append('<table class="table" id="myTable">'+ 
+				 '<tr>'+
+				 '<th>Name</th>'+
+				 '<th>Address</th>'+
+				 '<th>Email Address</th>'+
+				 '<th>Organization</th>'+
+				 '<th>Contact Number</th>'+
+			  	 '</tr>'+
+			    '</table>');
+					
+				  //for each value / entry in the database
+				  snapshot.forEach(function(childSnapshot) {
+					 var childData = childSnapshot.val();
+					 
+					 $('#myTable').append(
+					 '<tr>' +
+					 '<td>' + childData.Name + '</td>' +
+					 '<td>' + childData.Address + '</td>' +
+					 '<td>' + childData.EmailAddress + '</td>' +
+					 '<td>' + childData.Organization + '</td>' +
+					 '<td>' + childData.ContactNumber + '</td>' +
+					 '</tr>'
+					 );
+					 
+				  });
+				  //src: http://stackoverflow.com/questions/1964839/how-can-i-create-a-please-wait-loading-animation-using-jquery/1965079#1965079
+				  $('#spinner').hide();
+				});
+				
+				return false;
+			}
+
+		</script>	
+	</head>
+		
+	<body onload="getData()">
+		<div class="navigation">
+			<ul class="nav nav-tabs">
+			  <li role="presentation"><a href="index.html">Registration</a></li>
+			  <li role="presentation" class="active"><a href="view.html">View Registered Guests</a></li>
+			</ul>
+		</div>	
+		<div class="container">					
+		</div>		
+		<div id="spinner" align="center">
+		  <img src="http://i.stack.imgur.com/FhHRx.gif" alt="Loading" />
+		</div>	
+	</body>
+</html>

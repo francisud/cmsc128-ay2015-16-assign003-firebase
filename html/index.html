@@ -1,0 +1,168 @@
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	
+	<script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="../css/index.css">
+	
+</head>
+
+<!--
+	src: http://bootsnipp.com/snippets/featured/login-and-register-tabbed-form
+ -->
+
+<body>
+	<div class="navigation">
+		<ul class="nav nav-tabs">
+		  <li role="presentation" class="active"><a href="index.html">Registration</a></li>
+		  <li role="presentation"><a href="view.html">View Registered Guests</a></li>
+		</ul>
+	</div>
+	
+	<div class="container">		
+		<form class="form-horizontal">		
+		  <div class="form-group">
+			 <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+			 <div class="col-sm-10">
+				<input type="text" class="form-control" id="Name" placeholder="Name" required>
+			 </div>
+		  </div>
+		  
+		  <div class="form-group">
+			 <label for="inputPassword3" class="col-sm-2 control-label">Address</label>	
+			 <div class="col-sm-10">
+				<input type="text" class="form-control" id="Address" placeholder="Address">
+			 </div>
+		  </div>
+		  
+		  <div class="form-group">
+			 <label for="inputPassword3" class="col-sm-2 control-label">Email Address</label>
+			 <div class="col-sm-10">
+				<input type="text" class="form-control" id="EmailAddress" placeholder="Email Address">
+			 </div>
+		  </div>
+		  
+		  <div class="form-group">
+			 <label for="inputPassword3" class="col-sm-2 control-label">Organization</label>
+			 <div class="col-sm-10">
+				<input type="text" class="form-control" id="Organization" placeholder="Organization">
+			 </div>
+		  </div>
+		  
+		  <div class="form-group">
+			 <label for="inputPassword3" class="col-sm-2 control-label">Contact Number</label>
+			 <div class="col-sm-10">
+				<input type="text" class="form-control" id="ContactNumber" placeholder="Contact Number">
+			 </div>
+		  </div>
+		  
+		  <div class="form-group">
+			 <div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default" id="register-submit">Register</button>
+			 </div>
+		  </div>
+		</form>		
+	</div>
+	
+	<div id="spinner" align="center">
+	  <img src="http://i.stack.imgur.com/FhHRx.gif" alt="Loading" />
+	</div>
+	
+</body>
+
+<script>
+	$(document).ready(function(){
+		$('#spinner').hide();
+	
+		//function that will execute when button is clicked		
+		$("#register-submit").click(function(){		
+
+			//database
+			var myFirebaseRef = new Firebase("https://francisudpa3.firebaseio.com/");   
+		
+			//values
+			var Name = $("#Name").val();
+			var Address = $("#Address").val();
+			var EmailAddress = $("#EmailAddress").val();
+			var Organization = $("#Organization").val();
+			var ContactNumber = $("#ContactNumber").val();
+			
+			//checks values of each variable
+			if(Name == ""){
+				alert("Invalid Name");
+				return false;
+			}
+			
+			if(Address == ""){
+				alert("Invalid Address");
+				return false;
+			}
+			
+			if(EmailAddress == ""){
+				alert("Invalid Email Address");
+				return false;
+			}
+			
+			if(Organization == ""){
+				alert("Invalid Organization");
+				return false;
+			}
+			
+			if(ContactNumber == ""){
+				alert("Invalid Contact Number");
+				return false;
+			}
+			
+			$('.container').hide();
+			$('.navigation').hide();
+			
+			var heightSlider = $('#container').height();
+			$('#spinner').css({ paddingTop : heightSlider + 250 + 'px' });
+			
+			$('#spinner').show();
+			//push to database
+		   myFirebaseRef.push({
+		    'Name': Name,
+		    'Address': Address,
+		    'EmailAddress': EmailAddress,
+		    'Organization': Organization,
+		    'ContactNumber': ContactNumber		   
+		   }, function(){
+		   	$('.container').show();
+		   	$('.navigation').show();
+		   	$('#spinner').hide();
+	   	  //alerts the user
+				alert("Successfully added");
+		
+				//clears the input fields
+				ClearFields();
+		   });		   
+		   			
+			//for preventing default action of button
+			return false;
+		});		
+	});
+	
+	
+	//function for clearing fields
+	function ClearFields() {
+     document.getElementById("Name").value = "";
+     document.getElementById("Address").value = "";
+     document.getElementById("EmailAddress").value = "";
+     document.getElementById("Organization").value = "";
+     document.getElementById("ContactNumber").value = "";
+	}	
+	
+</script>
+</html>
